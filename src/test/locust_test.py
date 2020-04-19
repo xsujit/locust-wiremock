@@ -6,8 +6,8 @@ import json
 
 class UserBehavior(TaskSet):
 
-    id_dict = {}
-    current_id = 0
+    id_dict = {}  # create a pool of ids from which to GET
+    counter = 0
 
     def on_start(self):
         self.create_document()
@@ -16,12 +16,13 @@ class UserBehavior(TaskSet):
     def on_stop():
         print("on_stop called")
 
-    def create_document(self):
-        doc_id = random.randint(1, 100)
+    def create_document(self):  # POST new data which can be fetched later in the GET
+        doc_id = self.get_random()
         sample_data = {"id": doc_id}
-        self.current_id += 1
-        nest_data = {self.current_id: sample_data}
-        self.id_dict.update(nest_data)
+        self.counter += 1
+        nest_data = {self.counter: sample_data}
+        if self.counter <= 5:
+            self.id_dict.update(nest_data)  # add to the pool
         new_stub = "/document/" + str(doc_id)
         stub_payload = json.dumps({"request": {"url": new_stub, "method": "GET"}, "response": {"status": 200}})
         wire_mock_url = "http://localhost:8080/__admin/mappings/new"
@@ -31,7 +32,6 @@ class UserBehavior(TaskSet):
 
     @task(3)
     def get_document(self):
-        # print("Print: {} | Len: {}".format(self.id_dict, len(self.id_dict)))
         random_value = random.randint(1, len(self.id_dict))
         print("Len: {} | Random: {}".format(len(self.id_dict), random_value))
         doc_id = str(self.id_dict[random_value]["id"])
@@ -42,17 +42,31 @@ class UserBehavior(TaskSet):
 
     @task(1)
     def create_document_task(self):
-        doc_id = random.randint(1, 100)
+        doc_id = self.get_random()
         sample_data = {"id": doc_id}
-        self.current_id += 1
-        nest_data = {self.current_id: sample_data}
-        self.id_dict.update(nest_data)
+        self.counter += 1
+        nest_data = {self.counter: sample_data}
+        if self.counter <= 5:
+            self.id_dict.update(nest_data)
         new_stub = "/document/" + str(doc_id)
         stub_payload = json.dumps({"request": {"url": new_stub, "method": "GET"}, "response": {"status": 200}})
         wire_mock_url = "http://localhost:8080/__admin/mappings/new"
         r = self.client.post(wire_mock_url, data=stub_payload, headers={"content-type": "application/json"},
                              verify=False, name="Create Document")
         assert r.status_code == 201
+
+    def get_random(self):
+        while True:
+            print("Inside while")
+            found = False
+            doc_id = random.randint(1, 100)
+            for x in self.id_dict.values():
+                if doc_id == x["id"]:
+                    found = True
+                    break
+            if not found:
+                break
+        return doc_id
 
 
 class WebsiteUser(HttpLocust):
@@ -68,4 +82,4 @@ class WebsiteUser(HttpLocust):
 
     host = "https://localhost:8443"
     task_set = UserBehavior
-    wait_time = between(1.0, 1.0)
+    wait_time = between(10.0, 10.0)
