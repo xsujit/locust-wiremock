@@ -1,7 +1,9 @@
 
 # Prerequisite - Wiremock
 Download wiremock standalone jar and run it
+
 E.g. java -jar wiremock-standalone-2.27.2.jar
+
 For https add --https-port 8443
 
 # Locust (v1.2.3) performance test against wire mock instance
