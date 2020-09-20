@@ -9,7 +9,7 @@ For https add --https-port 8443
 # Locust (v1.2.3) performance test against wire mock instance
 Use following command to run the test
 
-locust -f locust_test.py  --headless -u 10 -r 1 --run-time 30s
+locust -f locust_test.py  --headless -u 2 -r 1 --run-time 1m
 
 The test will delete any existing wiremock mappings.
 
