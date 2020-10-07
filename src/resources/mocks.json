@@ -1,0 +1,46 @@
+{
+  "mappings": [
+    {
+      "request": {
+        "method": "GET",
+        "url": "/product/102"
+      },
+      "response": {
+        "status": 200,
+        "fixedDelayMilliseconds": 2000,
+        "jsonBody": {
+          "productName": "Toy",
+          "productCode": "102"
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "GET",
+        "url": "/document/2254"
+      },
+      "response": {
+        "status": 200,
+        "fixedDelayMilliseconds": 4000,
+        "jsonBody": {
+          "documentName": "Document",
+          "documentCode": "2254"
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "GET",
+        "url": "/document/323"
+      },
+      "response": {
+        "status": 200,
+        "fixedDelayMilliseconds": 6000,
+        "jsonBody": {
+          "documentName": "Document",
+          "documentCode": "323"
+        }
+      }
+    }
+  ]
+}

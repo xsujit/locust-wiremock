@@ -1,0 +1,6 @@
+version: '3'
+services:
+  wm-locust-test:
+    build: .
+    network_mode: "host"
+    command: -f /src/test/locust_test.py --headless -u 1 -r 1 -t 1m
